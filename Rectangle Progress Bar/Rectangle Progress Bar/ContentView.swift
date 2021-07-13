@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var topProgress: CGFloat = 10
+    @State var topProgress: CGFloat = 0
     @State var rightProgress: CGFloat = 0
     @State var leftProgress: CGFloat = 0
     @State var bottomProgress: CGFloat = 0
     @State var firstRun = true // commits timer once
-    @State var running = true
+    @State var running = true // prevents progress bars from moving without start button pressed
     var timer = Timer.publish(every: 0.005, on: .main, in: .common)
 
     var body: some View {
@@ -41,7 +41,6 @@ struct ContentView: View {
                         }
                     }
                 }
-                .ignoresSafeArea()
 
                 // button
                 VStack {
@@ -55,7 +54,7 @@ struct ContentView: View {
                             }
                             running = true
                         }, label: {
-                          Text("Start Progress Bars")
+                          Text("Start")
                         })
                         Spacer()
                         Button("Reset") {

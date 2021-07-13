@@ -77,6 +77,6 @@ struct RectangularProgressBar: View {
 
 struct RectangularProgressBar_Previews: PreviewProvider {
     static var previews: some View {
-        RectangularProgressBar(topProgress: CGFloat(10.0), rightProgress: CGFloat(0), leftProgress: CGFloat(0), bottomProgress: CGFloat(0), maxHeight: CGFloat(320), maxWidth: CGFloat(700))
+        RectangularProgressBar(topProgress: CGFloat(10.0), rightProgress: CGFloat(0), leftProgress: CGFloat(0), bottomProgress: CGFloat(0), maxHeight: CGFloat(700), maxWidth: CGFloat(300))
     }
 }
