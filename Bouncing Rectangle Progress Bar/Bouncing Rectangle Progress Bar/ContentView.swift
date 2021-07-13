@@ -38,62 +38,49 @@ struct ContentView: View {
     @State var firstRun = true // commits timer once
     @State var running = true // prevents progress bars from moving without start button pressed
 
+    //experimental
+    @State var finished = true
     // main view area
     var body: some View {
         GeometryReader { geometry in
             // getting screen size
-            let maxWidth = geometry.size.width/2
-            let maxHeight = geometry.size.height/2
+            let maxWidth = geometry.size.width/2 - 50
+            let maxHeight = geometry.size.height/2 - 50
             let totalDistance = maxWidth*4 + maxHeight * 4 // permiter
             let iteration = totalDistance / 5 * 0.005
             
             // UI code
             ZStack {
-                RectangularProgressBar(topProgress: topProgress, rightProgress: rightProgress, leftProgress: leftProgress, bottomProgress: bottomProgress, maxHeight: maxHeight*2, maxWidth: maxWidth*2)
-                    .onReceive(speedTimer) { _ in
-                        if running {
-                            if topProgress < maxWidth*2 {
-                                topProgress += iteration
-                            } else {
-                                if rightProgress < maxHeight*2 {
-                                    rightProgress += iteration
-                                } else {
-                                    if bottomProgress < maxWidth*2 {
-                                        bottomProgress += iteration
-                                    } else {
-                                        if leftProgress < maxHeight*2 {
-                                            leftProgress += iteration
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
 
                 Rectangle()
                     .overlay(ColoredRectangle()) // gives colors
                     .frame(width: 100, height: 100)
+                    .scaleEffect(0.5)
                     .foregroundColor(.white)
                     .offset(x: x, y: y)
                     .animation(.easeInOut(duration:1))
                     .onReceive(timer) { _ in
                         timeElapsed += 1
                     }
-                    .onReceive(actualTimer) { _ in
-                        // handles rectangle bouncing
-                        if time-timeElapsed > 0 {
-                            if abs(abs(x) - maxWidth) < 70 {
-                                print("Bouncing on Side: (\(x),\(y))")
-                                rightReverse = !rightReverse
+                    .onReceive(speedTimer) { _ in
+                        if x < maxWidth && topProgress < maxWidth*2 {
+                            topProgress += iteration
+                            x += iteration
+                        } else {
+                            if y < maxHeight && rightProgress < maxHeight*2 {
+                                rightProgress += iteration
+                                y += iteration
+                            } else {
+                                if x > -maxWidth && bottomProgress < maxWidth*2 {
+                                    bottomProgress += iteration
+                                    x += -iteration
+                                } else {
+                                    if y > -maxHeight && leftProgress < maxHeight * 2 {
+                                        leftProgress += iteration
+                                        y += -iteration
+                                    }
+                                }
                             }
-
-                            if abs(abs(y) - maxHeight) < 70 {
-                            print("Bouncing on Top/Bottom: (\(x),\(y))")
-                                leftReverse = !leftReverse
-                            }
-                            
-                            x += rightReverse ? CGFloat(-randomX) : CGFloat(randomX)
-                            y += leftReverse ? CGFloat(-randomY) : CGFloat(randomY)
                         }
                     }
 
@@ -112,6 +99,9 @@ struct ContentView: View {
                                 print("Max Width: \(maxWidth)")
                                 print("Max Height: \(maxHeight)")
                                 print("Distance travelled: \(totalDistance)")
+                                // moving the rectangle to the top left corner
+                                x = -maxWidth
+                                y = -maxHeight
                                 
                             }
 
